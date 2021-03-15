@@ -227,21 +227,21 @@ public abstract class CommonJibriStuff
         // start ?
         if (JibriIq.Action.START.equals(action))
         {
-            if (jibriSession == null)
-            {
+            // if (jibriSession == null)
+            // {
                 return handleStartRequest(iq);
-            }
-            else
-            {
-                // If there's a session active, we know there are Jibri's connected
-                // (so it isn't XMPPError.Condition.service_unavailable), so it
-                // must be that they're all busy.
-                logger.info("Failed to start a Jibri session, all Jibris were busy");
-                return ErrorResponse.create(
-                        iq,
-                        XMPPError.Condition.resource_constraint,
-                        "all Jibris are busy");
-            }
+            // }
+            // else
+            // {
+            //     // If there's a session active, we know there are Jibri's connected
+            //     // (so it isn't XMPPError.Condition.service_unavailable), so it
+            //     // must be that they're all busy.
+            //     logger.info("Failed to start a Jibri session, all Jibris were busy");
+            //     return ErrorResponse.create(
+            //             iq,
+            //             XMPPError.Condition.resource_constraint,
+            //             "all Jibris are busy");
+            // }
         }
         // stop ?
         else if (JibriIq.Action.STOP.equals(action) &&
