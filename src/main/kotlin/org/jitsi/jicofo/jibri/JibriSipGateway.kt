@@ -85,7 +85,7 @@ class JibriSipGateway(
                 jibriDetector,
                 false,
                 iq.sipAddress,
-                iq.displayName, null, null, sessionId, null,
+                iq.displayName, null,null,null, null,null, sessionId, null,
                 logger
             )
             sipSessions[iq.sipAddress] = jibriSession

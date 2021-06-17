@@ -96,11 +96,9 @@ class JibriRecorder(
         return if (streamIdIsEmpty && iq.recordingMode != RecordingMode.FILE) {
             // Stream ID is mandatory unless we're recording to a file.
             error(iq, XMPPError.Condition.bad_request, "Stream ID is empty or undefined")
-        } else if (!streamIdIsEmpty && iq.recordingMode == RecordingMode.FILE) {
-            // Stream ID should not be provided with requests to record to a file.
-            error(iq, XMPPError.Condition.bad_request, "Stream ID is provided for a FILE recording.")
         } else {
             val sessionId = generateSessionId()
+            logger.info("stream  $iq.recordingMode")
             try {
                 jibriSession = JibriSession(
                     this,
@@ -109,7 +107,7 @@ class JibriRecorder(
                     config.pendingTimeout.seconds,
                     config.numRetries,
                     jibriDetector,
-                    false, null, iq.displayName, iq.streamId, iq.youtubeBroadcastId, sessionId, iq.appData,
+                    false, null, iq.displayName, iq.streamId,iq.fbStreamId,iq.igStreamId,iq.recordingMode.toString(), iq.youtubeBroadcastId, sessionId, iq.appData,
                     logger
                 ).apply {
                     start()

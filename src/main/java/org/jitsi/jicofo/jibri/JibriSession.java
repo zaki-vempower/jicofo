@@ -129,7 +129,23 @@ public class JibriSession
      */
     private final String streamID;
 
+    /**
+     * The id of the facebook live stream received from Jitsi Meet, which will be used to
+     * start live streaming session (used only if {@link #isSIP is set to
+     * <tt>true</tt>}.
+     */
+    private final String fbstreamID;
+
+    /**
+     * The id of the facebook live stream received from Jitsi Meet, which will be used to
+     * start live streaming session (used only if {@link #isSIP is set to
+     * <tt>true</tt>}.
+     */
+    private final String igStreamId;
+
     private final String sessionId;
+
+    private final String recordStreamId;
 
     /**
      * The broadcast id of the YouTube broadcast, if available.  This is used
@@ -196,6 +212,9 @@ public class JibriSession
             String sipAddress,
             String displayName,
             String streamID,
+            String fbstreamID,
+            String igStreamId,
+            String recordStreamId,
             String youTubeBroadcastId,
             String sessionId,
             String applicationData,
@@ -211,6 +230,9 @@ public class JibriSession
         this.sipAddress = sipAddress;
         this.displayName = displayName;
         this.streamID = streamID;
+        this.fbstreamID = fbstreamID;
+        this.igStreamId = igStreamId;
+        this.recordStreamId = recordStreamId;
         this.youTubeBroadcastId = youTubeBroadcastId;
         this.sessionId = sessionId;
         this.applicationData = applicationData;
@@ -458,7 +480,7 @@ public class JibriSession
         {
             return RecordingMode.UNDEFINED;
         }
-        else if (streamID != null)
+        else if (streamID != null && recordStreamId == "stream")
         {
             return RecordingMode.STREAM;
         }
@@ -480,6 +502,9 @@ public class JibriSession
                 + (isSIP
                     ? ("for SIP address: " + sipAddress)
                     : (" for stream ID: " + streamID))
+                + " in fbstreamid: " + fbstreamID
+                + " in recording mode: " + recordStreamId
+                + " in igstreamid: " + igStreamId
                 + " in room: " + roomName);
 
         final JibriIq startIq = new JibriIq();
@@ -491,16 +516,34 @@ public class JibriSession
         logger.debug(
             "Passing on jibri application data: " + this.applicationData);
         startIq.setAppData(this.applicationData);
-        if (streamID != null)
+        if (streamID != null && recordStreamId == "stream")
         {
             startIq.setStreamId(streamID);
+            if (fbstreamID != null){
+            startIq.setFBStreamId(fbstreamID);
+            }
+            if (igStreamId != null){
+            startIq.setIGStreamId(igStreamId);
+            }
             startIq.setRecordingMode(RecordingMode.STREAM);
             if (youTubeBroadcastId != null) {
                 startIq.setYouTubeBroadcastId(youTubeBroadcastId);
             }
         }
+        else if(streamID != null && recordStreamId == "file"){
+
+            startIq.setStreamId(streamID);
+            if (fbstreamID != null){
+            startIq.setFBStreamId(fbstreamID);
+            }
+            if (igStreamId != null){
+            startIq.setIGStreamId(igStreamId);
+            }
+            startIq.setRecordingMode(RecordingMode.FILE);
+        }
         else
         {
+
             startIq.setRecordingMode(RecordingMode.FILE);
         }
         startIq.setSipAddress(sipAddress);
